@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "acwm-prototype"
+version = "0.1.0"
+description = "Research prototype for implicit-domain structural design"
+readme = "README.md"
+license = "AGPL-3.0-only"
+license-files = ["LICENSE"]
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.26",
+    "scipy>=1.12",
+    "scikit-image>=0.23",
+]
+
+[project.optional-dependencies]
+cad = ["cadquery>=2.5"]
+surrogate = ["torch>=2.2"]
+edge = ["torch>=2.2"]
+test = ["httpx>=0.27", "pytest>=8", "ruff>=0.11"]
+cloud = ["cadquery>=2.5", "fastapi>=0.115", "uvicorn>=0.30"]
+
+[project.scripts]
+acwm = "acwm:main"
+acwm-intent = "acwm_intent:main"
+acwm-orchestrator = "acwm_orchestrator:main"
+acwm-agent-loop = "acwm_agent_loop:main"
+
+[tool.setuptools]
+py-modules = [
+    "acwm",
+    "acwm_api",
+    "acwm_agent_loop",
+    "acwm_cad",
+    "acwm_edge",
+    "acwm_export",
+    "acwm_intent",
+    "acwm_jobs",
+    "acwm_manufacturing",
+    "acwm_orchestrator",
+    "acwm_sensitivity",
+    "acwm_surrogate",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
