@@ -294,6 +294,24 @@ Production use still requires independently validated solvers, calibrated
 material/process data, geometric self-intersection checks, a wider
 surface-to-B-rep pipeline, and manufacturing qualification.
 
+## V-Wrap: The Trust-Oracle Wrapper
+
+V-Wrap is the modular application-layer proxy that sits in front of Vulcan. It acts as a **trust oracle** for autonomous CAD agents, translating high-level feature requests into Vulcan's strict deterministic primitives without polluting the immutable core.
+
+### Two Explicit Paths, Two Distinct Guarantees
+* **The Analytic Path:** Maps features strictly to exact `BoxWithThroughBores`. It enforces the core's highest guarantee: verified analytic primitives via OCP round-trip validation and single closed solids.
+* **The Level-Set Path:** Handles advanced features (`rounded_box`, `chamfer`, `pattern`, `sphere_exclusion`) via sampled SDF fields. It enforces a strict **fidelity floor** ($ratio \ge 3.0 \times$ cross-section voxel size), performs sign-flip effect tracking to eliminate ghost features, and explicitly stamps output as a *watertight faceted B-rep (not FEA-verified)*.
+
+### Agent-Ready Design Space Explorer (`vwrap query`)
+V-Wrap provides a programmatic state machine (`vwrap query`) that allows AI agents to inspect legal design spaces before compiling geometry:
+```bash
+vwrap query --request request.json
+# Build an analytic STEP part
+vwrap build --request request.json --output part.step --path analytic
+
+# Query available design space actions
+vwrap query --request request.json
+
 ## License
 
 Vulcan is distributed under the GNU Affero General Public License, version 3
